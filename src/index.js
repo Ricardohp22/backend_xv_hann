@@ -14,7 +14,16 @@ const carouselPath = path.join(__dirname, '..', 'data', 'carousel.json')
 const EVENT_ID = 1
 
 const app = express()
-app.use(cors())
+
+const corsOrigins = process.env.CORS_ORIGIN?.split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+if (corsOrigins.length) {
+  app.use(cors({ origin: corsOrigins }))
+} else {
+  app.use(cors())
+}
+
 app.use(express.json())
 
 function readCarousel() {
@@ -398,6 +407,7 @@ app.post('/api/families/:familyId/messages', async (req, res) => {
 })
 
 const port = Number(process.env.PORT || 3000)
-app.listen(port, () => {
-  console.log(`API xv_hanna en http://192.168.100.119:${port}`)
+const host = process.env.HOST || '0.0.0.0'
+app.listen(port, host, () => {
+  console.log(`API xv_hanna en http://${host}:${port}`)
 })
