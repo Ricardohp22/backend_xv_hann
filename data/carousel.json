@@ -1,15 +1,15 @@
 {
   "slides": [
     {
-      "image": "/carousel/slide-1.svg",
+      "image": "/carousel/slide-1.jpeg",
       "text": "Un día mágico que guardaré en el corazón para siempre"
     },
     {
-      "image": "/carousel/slide-2.svg",
+      "image": "/carousel/slide-2.jpg",
       "text": "Gracias por ser parte de esta historia"
     },
     {
-      "image": "/carousel/slide-3.svg",
+      "image": "/carousel/slide-3.jpg",
       "text": "Con amor, Hanna"
     }
   ]
