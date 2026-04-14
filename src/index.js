@@ -70,9 +70,19 @@ app.get('/api/families/:familyId/invitation', async (req, res) => {
     await ensureRsvpForGuests(client, familyId)
 
     const [event, venues, sponsors, schedule, guests, extraRow] = await Promise.all([
-      client.query(`SELECT id, name, description, event_date FROM event WHERE id = $1`, [EVENT_ID]),
       client.query(
-        `SELECT id, name, address, type, start_time, end_time FROM venue WHERE event_id = $1 ORDER BY type, id`,
+        `SELECT id, name, description, event_date::text AS event_date FROM event WHERE id = $1`,
+        [EVENT_ID]
+      ),
+      client.query(
+        `
+        SELECT id, name, address, type::text AS type,
+          CASE WHEN start_time IS NULL THEN NULL ELSE to_char(start_time, 'HH24:MI:SS') END AS start_time,
+          CASE WHEN end_time IS NULL THEN NULL ELSE to_char(end_time, 'HH24:MI:SS') END AS end_time
+        FROM venue
+        WHERE event_id = $1
+        ORDER BY CASE WHEN type::text = 'misa' THEN 0 WHEN type::text = 'fiesta' THEN 1 ELSE 2 END, id
+        `,
         [EVENT_ID]
       ),
       client.query(
